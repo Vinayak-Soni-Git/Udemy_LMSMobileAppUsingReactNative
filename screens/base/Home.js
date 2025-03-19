@@ -1,5 +1,5 @@
 import {Image, Text, TouchableOpacity, View, TextInput, ScrollView, Alert} from 'react-native';
-import React, {Component, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import {Avatar} from '../components/Image'
