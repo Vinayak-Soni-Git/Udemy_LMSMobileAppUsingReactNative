@@ -11,7 +11,6 @@ import Checkout from "./screens/base/Checkout";
 import Success from "./screens/base/Success";
 import Login from "./screens/auth/Login";
 import Register from "./screens/auth/Register";
-
 import Dashboard from './screens/student/Dashboard';
 import Message from './screens/student/Message';
 import MyCourses from './screens/student/MyCourses';
@@ -19,6 +18,7 @@ import Note from './screens/student/Note';
 import Settings from './screens/student/Settings';
 import StudentCourseDetail from './screens/student/StudentCourseDetail';
 import {Provider} from "react-redux";
+import Reviews from "./screens/student/Reviews";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,10 +29,8 @@ export default function App() {
                 <Provider store={store}>
                     <NavigationContainer>
                         <Stack.Navigator initialRouteName={'Login'} >
-                            {/*Auth Screens*/}
                             <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                             <Stack.Screen name='Register' component={Register} options={{headerShown: false}}/>
-
                             <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
                             <Stack.Screen name="CourseDetail" component={CourseDetail} options={{headerShown: false}}/>
                             <Stack.Screen name="Cart" component={Cart} options={{headerShown: false}}/>
@@ -42,9 +40,9 @@ export default function App() {
                             <Stack.Screen name={'Message'} component={Message} options={{headerShown: false}}/>
                             <Stack.Screen name={'MyCourses'} component={MyCourses} options={{headerShown: false}}/>
                             <Stack.Screen name={'Note'} component={Note} options={{headerShown: false}}/>
+                            <Stack.Screen name={'Reviews'} component={Reviews} options={{headerShown:false}} />
                             <Stack.Screen name={'Settings'} component={Settings} options={{headerShown: false}}/>
-                            <Stack.Screen name={'StudentCourseDetail'} component={StudentCourseDetail}
-                                          options={{headerShown: false}}/>
+                            <Stack.Screen name={'StudentCourseDetail'} component={StudentCourseDetail} options={{headerShown: false}}/>
                         </Stack.Navigator>
                     </NavigationContainer>
                 </Provider>

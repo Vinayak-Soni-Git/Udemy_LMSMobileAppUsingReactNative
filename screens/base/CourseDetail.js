@@ -1,4 +1,4 @@
-import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React, {useEffect, useRef, useState} from "react";
@@ -8,18 +8,26 @@ import apiInstance from "../../src/utils/Axios";
 import moment from 'moment'
 import RBSheet from "react-native-raw-bottom-sheet";
 import BottomScreenNavigation from "../components/BottomScreenNavigation";
-import cardId from "../../src/plugins/CardId";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUserData from "../../src/plugins/UseUserData";
+import {ResizeMode} from "expo-av";
+import {useVideoPlayer, VideoView} from "expo-video";
 
 const CourseDetail = ({route})=>{
     const [expanded, setExpanded] = useState(true);
-    const [cartStatus, setCartStatus] = useState(false);
     const [course, setCourse] = useState([])
     const [cartId, setCartId] = useState('')
     const [selectedVariantItem, setSelectedVariantItem] = useState({title:'', video:'', content_duration:''})
     const user_id = useUserData()
-    console.log(user_id)
+
+    const [status, setStatus] = useState({});
+    const video = useRef(null)
+    const videoSource = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
+    const player = useVideoPlayer(videoSource, player => {
+        player.loop = true;
+        player.play();
+    });
 
     const refRBSheet = useRef()
     const {course_slug} = route.params
@@ -215,6 +223,14 @@ const CourseDetail = ({route})=>{
                     height={300}
                     customStyles={{wrapper:{backgroundColor:'#00000077'}, draggableIcon:{backgroundColor:'#020e40'}}}>
                     <Text className={'text-center'} >{selectedVariantItem?.title} - {selectedVariantItem?.content_duration}</Text>
+                    <VideoView
+                        player={player}
+                        ref={video}
+                        style={styles.video}
+                        useNativeControls
+                        resizeMode={ResizeMode.CONTAIN}
+                        isLooping={true}
+                        onPlaybackStatusUpdate={(status)=>setStatus(()=>status)}/>
                 </RBSheet>
             </View>
 
@@ -223,3 +239,19 @@ const CourseDetail = ({route})=>{
 }
 
 export default CourseDetail
+
+const styles = StyleSheet.create({
+    container:{
+        justifyContent:'center',
+    },
+    video:{
+        alignSelf:'center',
+        width:320,
+        height:200,
+    },
+    button:{
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
+    }
+})

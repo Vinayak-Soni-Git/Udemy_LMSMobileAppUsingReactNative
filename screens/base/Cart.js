@@ -7,6 +7,7 @@ import BottomScreenNavigation from "../components/BottomScreenNavigation";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiInstance from "../../src/utils/Axios";
+import useUserData from "../../src/plugins/UseUserData";
 
 const Cart = ({route})=>{
 
@@ -14,9 +15,12 @@ const Cart = ({route})=>{
     const [cart, setCart] = useState([])
     const [cartStats, setCartStats] = useState([])
     const [loading, setLoading] = useState(true)
+    const [cartId, setCartId] = useState('')
+    const userId = useUserData()
 
     const fetchCartItems = async () => {
         const cart_id = await AsyncStorage.getItem('randomString')
+        setCartId(cart_id)
         setLoading(true)
         try{
             const cart_response = await apiInstance.get(`cart/list/${cart_id}`)
@@ -38,6 +42,19 @@ const Cart = ({route})=>{
         const url = await `cart/item-delete/${cartId}/${itemId}/`
         await apiInstance.delete(url)
         fetchCartItems()
+    }
+
+    const createCartOrder = async () =>{
+        try{
+            const json = {
+                cart_id:cartId,
+                user_id:userId,
+            }
+            const response = await apiInstance.post('order/create-order/', json)
+            navigation.navigate('Checkout', {checkout_id:response.data.order_oid})
+        }catch(error){
+            console.log(error)
+        }
     }
 
     return (
@@ -84,7 +101,7 @@ const Cart = ({route})=>{
                         <Text className={'text-[18px]'} >${cartStats?.total}</Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={()=>navigation.navigate('Checkout')} className={'bg-[#280e49] w-[100%] flex-row justify-center p-2 rounded-md'} >
+                <TouchableOpacity onPress={createCartOrder} className={'bg-[#280e49] w-[100%] flex-row justify-center p-2 rounded-md'} >
                     <Text className={'text-white'} >Proceed To Checkout</Text>
                 </TouchableOpacity>
             </View>
